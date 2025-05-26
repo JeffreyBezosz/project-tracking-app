@@ -18,6 +18,16 @@
             --text: #334155;
             --text-muted: #64748b;
             --border: #e2e8f0;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .dark-mode {
+            --light: #0f172a;
+            --dark: #f8fafc;
+            --surface: #1e293b;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: #334155;
         }
 
         * {
@@ -30,6 +40,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--light);
             color: var(--text);
+            transition: all 0.3s ease;
             min-height: 100vh;
         }
 
@@ -48,7 +59,10 @@
 
         .header h1 {
             font-size: 2.5rem;
-            color: var(--primary);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 10px;
             font-weight: 700;
         }
@@ -63,8 +77,14 @@
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
 
         .progress-section {
@@ -79,6 +99,7 @@
             border: 4px solid var(--primary);
             border-radius: 0 0 60px 60px;
             background: var(--light);
+            overflow: hidden;
         }
 
         .water-fill {
@@ -86,9 +107,26 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: var(--primary);
-            height: 0%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 0 0 56px 56px;
+            height: 25%;
+        }
+
+        .water-wave {
+            position: absolute;
+            top: -10px;
+            left: -50%;
+            width: 200%;
+            height: 20px;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            50% { transform: translateX(10px) rotate(180deg); }
         }
 
         .progress-text {
@@ -110,7 +148,7 @@
         }
 
         .quick-btn {
-            background: var(--primary);
+            background: var(--gradient);
             color: white;
             border: none;
             padding: 15px;
@@ -118,6 +156,18 @@
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .quick-btn:active {
+            transform: translateY(0);
         }
 
         .custom-input {
@@ -134,6 +184,13 @@
             background: var(--light);
             color: var(--text);
             font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .custom-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .custom-input button {
@@ -144,6 +201,12 @@
             border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .custom-input button:hover {
+            background: var(--primary);
+            transform: translateY(-1px);
         }
 
         .stats-grid {
@@ -191,6 +254,12 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
         }
 
         .calendar-title {
@@ -212,7 +281,33 @@
             border-radius: 12px;
             background: var(--light);
             border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
             font-weight: 600;
+        }
+
+        .calendar-day:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+        }
+
+        .calendar-day.today {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .calendar-day.completed {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .calendar-day.partial {
+            background: var(--warning);
+            color: white;
+            border-color: var(--warning);
         }
 
         .controls {
@@ -230,6 +325,75 @@
             border-radius: 10px;
             cursor: pointer;
             font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .achievements {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .achievement {
+            background: var(--gradient);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 400px;
+            margin: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .celebration {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         @media (max-width: 480px) {
@@ -256,10 +420,15 @@
 
         <div class="card progress-section">
             <div class="water-glass">
-                <div class="water-fill"></div>
+                <div class="water-fill">
+                    <div class="water-wave"></div>
+                </div>
             </div>
-            <div class="progress-text">0 / 2000 ml</div>
-            <div class="progress-subtext">0% van je doel bereikt</div>
+            <div class="progress-text">500 / 2000 ml</div>
+            <div class="progress-subtext">25% van je doel bereikt</div>
+            <div class="achievements">
+                <div class="achievement">🚀 Goed bezig!</div>
+            </div>
         </div>
 
         <div class="card">
@@ -280,19 +449,19 @@
             <h3 style="margin-bottom: 15px; text-align: center;">📊 Statistieken</h3>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-value">0ml</div>
+                    <div class="stat-value">500ml</div>
                     <div class="stat-label">Vandaag</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">0ml</div>
+                    <div class="stat-value">1200ml</div>
                     <div class="stat-label">Week gemiddeld</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">0</div>
+                    <div class="stat-value">3</div>
                     <div class="stat-label">Dagen streak</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">0</div>
+                    <div class="stat-value">12</div>
                     <div class="stat-label">Doel behaald</div>
                 </div>
             </div>
@@ -305,15 +474,27 @@
                 <button class="calendar-nav">›</button>
             </div>
             <div class="calendar-grid">
-                <!-- Calendar days will be generated here -->
-                <div class="calendar-day">1</div>
-                <div class="calendar-day">2</div>
-                <div class="calendar-day">3</div>
+                <div class="calendar-day completed">1</div>
+                <div class="calendar-day completed">2</div>
+                <div class="calendar-day partial">3</div>
                 <div class="calendar-day">4</div>
-                <div class="calendar-day">5</div>
+                <div class="calendar-day completed">5</div>
                 <div class="calendar-day">6</div>
-                <div class="calendar-day">7</div>
-                <!-- More days... -->
+                <div class="calendar-day completed">7</div>
+                <div class="calendar-day">8</div>
+                <div class="calendar-day partial">9</div>
+                <div class="calendar-day completed">10</div>
+                <div class="calendar-day">11</div>
+                <div class="calendar-day">12</div>
+                <div class="calendar-day completed">13</div>
+                <div class="calendar-day today">14</div>
+                <div class="calendar-day">15</div>
+                <div class="calendar-day">16</div>
+                <div class="calendar-day">17</div>
+                <div class="calendar-day">18</div>
+                <div class="calendar-day">19</div>
+                <div class="calendar-day">20</div>
+                <div class="calendar-day">21</div>
             </div>
         </div>
 
@@ -323,5 +504,9 @@
             <button class="control-btn">📤 Export data</button>
         </div>
     </div>
-</body>
-</html>
+
+    <!-- Goal Achievement Modal -->
+    <div class="modal">
+        <div class="modal-content">
+            <div class="celebration">🎉</div>
+            <h2>Gefeliciteerd!</h2>
