@@ -18,16 +18,6 @@
             --text: #334155;
             --text-muted: #64748b;
             --border: #e2e8f0;
-            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .dark-mode {
-            --light: #0f172a;
-            --dark: #f8fafc;
-            --surface: #1e293b;
-            --text: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border: #334155;
         }
 
         * {
@@ -40,7 +30,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--light);
             color: var(--text);
-            transition: all 0.3s ease;
             min-height: 100vh;
         }
 
@@ -59,10 +48,7 @@
 
         .header h1 {
             font-size: 2.5rem;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary);
             margin-bottom: 10px;
             font-weight: 700;
         }
@@ -77,14 +63,8 @@
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--border);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
 
         .progress-section {
@@ -99,7 +79,6 @@
             border: 4px solid var(--primary);
             border-radius: 0 0 60px 60px;
             background: var(--light);
-            overflow: hidden;
         }
 
         .water-fill {
@@ -107,7 +86,242 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--primary);
+            height: 0%;
             border-radius: 0 0 56px 56px;
         }
+
+        .progress-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .progress-subtext {
+            color: var(--text-muted);
+        }
+
+        .quick-add {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .quick-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .custom-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .custom-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: var(--light);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .custom-input button {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .calendar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: var(--light);
+            border: 2px solid var(--border);
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--border);
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .quick-add {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💧 Water Tracker Pro</h1>
+            <p>Stay hydrated, stay healthy!</p>
+        </div>
+
+        <div class="card progress-section">
+            <div class="water-glass">
+                <div class="water-fill"></div>
+            </div>
+            <div class="progress-text">0 / 2000 ml</div>
+            <div class="progress-subtext">0% van je doel bereikt</div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 15px; text-align: center;">💧 Water toevoegen</h3>
+            <div class="quick-add">
+                <button class="quick-btn">🥛 250ml</button>
+                <button class="quick-btn">🍶 500ml</button>
+                <button class="quick-btn">🥤 330ml</button>
+                <button class="quick-btn">🍼 750ml</button>
+            </div>
+            <div class="custom-input">
+                <input type="number" placeholder="Custom ml" min="1" max="2000">
+                <button>Toevoegen</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 15px; text-align: center;">📊 Statistieken</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">0ml</div>
+                    <div class="stat-label">Vandaag</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0ml</div>
+                    <div class="stat-label">Week gemiddeld</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Dagen streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Doel behaald</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="calendar-header">
+                <button class="calendar-nav">‹</button>
+                <div class="calendar-title">December 2024</div>
+                <button class="calendar-nav">›</button>
+            </div>
+            <div class="calendar-grid">
+                <!-- Calendar days will be generated here -->
+                <div class="calendar-day">1</div>
+                <div class="calendar-day">2</div>
+                <div class="calendar-day">3</div>
+                <div class="calendar-day">4</div>
+                <div class="calendar-day">5</div>
+                <div class="calendar-day">6</div>
+                <div class="calendar-day">7</div>
+                <!-- More days... -->
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn">🔄 Reset vandaag</button>
+            <button class="control-btn">🌙 Dark mode</button>
+            <button class="control-btn">📤 Export data</button>
+        </div>
+    </div>
+</body>
+</html>
