@@ -412,36 +412,34 @@
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
         <div class="header">
             <h1>💧 Water Tracker Pro</h1>
             <p>Stay hydrated, stay healthy!</p>
         </div>
 
         <div class="card progress-section">
-            <div class="water-glass">
-                <div class="water-fill">
+            <div class="water-glass" id="waterGlass">
+                <div class="water-fill" id="waterFill">
                     <div class="water-wave"></div>
                 </div>
             </div>
-            <div class="progress-text">500 / 2000 ml</div>
-            <div class="progress-subtext">25% van je doel bereikt</div>
-            <div class="achievements">
-                <div class="achievement">🚀 Goed bezig!</div>
-            </div>
+            <div class="progress-text" id="progressText">0 / 2000 ml</div>
+            <div class="progress-subtext" id="progressPercent">0% van je doel bereikt</div>
+            <div class="achievements" id="achievements"></div>
         </div>
 
         <div class="card">
             <h3 style="margin-bottom: 15px; text-align: center;">💧 Water toevoegen</h3>
             <div class="quick-add">
-                <button class="quick-btn">🥛 250ml</button>
-                <button class="quick-btn">🍶 500ml</button>
-                <button class="quick-btn">🥤 330ml</button>
-                <button class="quick-btn">🍼 750ml</button>
+                <button class="quick-btn" onclick="addWater(250)">🥛 250ml</button>
+                <button class="quick-btn" onclick="addWater(500)">🍶 500ml</button>
+                <button class="quick-btn" onclick="addWater(330)">🥤 330ml</button>
+                <button class="quick-btn" onclick="addWater(750)">🍼 750ml</button>
             </div>
             <div class="custom-input">
-                <input type="number" placeholder="Custom ml" min="1" max="2000">
-                <button>Toevoegen</button>
+                <input type="number" id="customAmount" placeholder="Custom ml" min="1" max="2000">
+                <button onclick="addCustomWater()">Toevoegen</button>
             </div>
         </div>
 
@@ -449,64 +447,21 @@
             <h3 style="margin-bottom: 15px; text-align: center;">📊 Statistieken</h3>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-value">500ml</div>
+                    <div class="stat-value" id="todayAmount">0ml</div>
                     <div class="stat-label">Vandaag</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">1200ml</div>
+                    <div class="stat-value">0ml</div>
                     <div class="stat-label">Week gemiddeld</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">3</div>
+                    <div class="stat-value">0</div>
                     <div class="stat-label">Dagen streak</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">12</div>
+                    <div class="stat-value">0</div>
                     <div class="stat-label">Doel behaald</div>
                 </div>
             </div>
         </div>
-
-        <div class="card">
-            <div class="calendar-header">
-                <button class="calendar-nav">‹</button>
-                <div class="calendar-title">December 2024</div>
-                <button class="calendar-nav">›</button>
-            </div>
-            <div class="calendar-grid">
-                <div class="calendar-day completed">1</div>
-                <div class="calendar-day completed">2</div>
-                <div class="calendar-day partial">3</div>
-                <div class="calendar-day">4</div>
-                <div class="calendar-day completed">5</div>
-                <div class="calendar-day">6</div>
-                <div class="calendar-day completed">7</div>
-                <div class="calendar-day">8</div>
-                <div class="calendar-day partial">9</div>
-                <div class="calendar-day completed">10</div>
-                <div class="calendar-day">11</div>
-                <div class="calendar-day">12</div>
-                <div class="calendar-day completed">13</div>
-                <div class="calendar-day today">14</div>
-                <div class="calendar-day">15</div>
-                <div class="calendar-day">16</div>
-                <div class="calendar-day">17</div>
-                <div class="calendar-day">18</div>
-                <div class="calendar-day">19</div>
-                <div class="calendar-day">20</div>
-                <div class="calendar-day">21</div>
-            </div>
-        </div>
-
-        <div class="controls">
-            <button class="control-btn">🔄 Reset vandaag</button>
-            <button class="control-btn">🌙 Dark mode</button>
-            <button class="control-btn">📤 Export data</button>
-        </div>
     </div>
-
-    <!-- Goal Achievement Modal -->
-    <div class="modal">
-        <div class="modal-content">
-            <div class="celebration">🎉</div>
-            <h2>Gefeliciteerd!</h2>
