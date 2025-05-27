@@ -513,3 +513,25 @@
                     console.log('Ongeldige hoeveelheid ingevoerd');
                 }
             }
+
+checkAchievements() {
+                const achievements = [];
+                
+                if (this.currentAmount >= this.settings.dailyGoal) {
+                    achievements.push('🏆 Doel behaald!');
+                }
+                if (this.currentAmount >= this.settings.dailyGoal * 1.5) {
+                    achievements.push('💪 Overachiever!');
+                }
+                if (this.currentAmount >= 1000) {
+                    achievements.push('🚀 Goed bezig!');
+                }
+                
+              
+                const achievementsEl = document.getElementById('achievements');
+                achievementsEl.innerHTML = achievements
+                    .map(achievement => `<div class="achievement">${achievement}</div>`)
+                    .join('');
+                
+                console.log('Achievements bijgewerkt:', achievements);
+            }
