@@ -465,3 +465,51 @@
             </div>
         </div>
     </div>
+
+<script>
+      
+        class WaterTracker {
+            constructor() {
+                this.settings = {
+                    dailyGoal: 2000,
+                    reminderInterval: 60,
+                    darkMode: false
+                };
+                this.currentAmount = 0;
+                this.today = new Date().toISOString().split('T')[0];
+                
+                console.log('Water Tracker geïnitialiseerd op:', this.today);
+                this.init();
+            }
+
+            init() {
+                console.log('Initialisatie gestart...');
+                this.updateUI();
+                this.checkAchievements();
+                console.log('UI bijgewerkt');
+            }
+
+           
+            addWater(amount) {
+                console.log(`Water toevoegen: ${amount}ml`);
+                this.currentAmount += amount;
+                this.updateUI();
+                this.checkAchievements();
+                this.showWaterAnimation();
+                
+                console.log(`Totaal nu: ${this.currentAmount}ml`);
+            }
+
+            
+            addCustomWater() {
+                const input = document.getElementById('customAmount');
+                const amount = parseInt(input.value);
+                
+                if (amount && amount > 0) {
+                    console.log(`Custom water toevoegen: ${amount}ml`);
+                    this.addWater(amount);
+                    input.value = ''; 
+                } else {
+                    console.log('Ongeldige hoeveelheid ingevoerd');
+                }
+            }
