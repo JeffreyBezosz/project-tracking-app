@@ -561,3 +561,21 @@ checkAchievements() {
                 console.log(`UI bijgewerkt: ${this.currentAmount}ml (${Math.round(percentage)}%)`);
             }
         }
+
+        let tracker;
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM geladen, tracker wordt gestart...');
+            tracker = new WaterTracker();
+        });
+
+        
+        function addWater(amount) {
+            tracker.addWater(amount);
+        }
+
+        function addCustomWater() {
+            tracker.addCustomWater();
+        }
+    </script>
+</body>
+</html>
