@@ -420,7 +420,7 @@
             color: var(--text);
             text-align: center;
         }
-        
+
         @media (max-width: 480px) {
             .container {
                 padding: 10px;
@@ -491,6 +491,23 @@
         </div>
     </div>
 
+           <div class="controls">
+            <button class="control-btn" onclick="resetDay()">🔄 Reset vandaag</button>
+            <button class="control-btn" onclick="toggleDarkMode()">🌙 Dark mode</button>
+            <button class="control-btn" onclick="exportData()">📤 Export data</button>
+        </div>
+    </div>
+
+    <!-- Goal Achievement Modal -->
+    <div class="modal" id="achievementModal">
+        <div class="modal-content">
+            <div class="celebration">🎉</div>
+            <h2>Gefeliciteerd!</h2>
+            <p>Je hebt je dagdoel bereikt!</p>
+            <button class="quick-btn" style="margin-top: 20px;" onclick="closeModal()">Geweldig!</button>
+        </div>
+    </div>
+    
 <script>
       
         class WaterTracker {
