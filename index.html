@@ -535,3 +535,29 @@ checkAchievements() {
                 
                 console.log('Achievements bijgewerkt:', achievements);
             }
+
+            showWaterAnimation() {
+                const glass = document.getElementById('waterGlass');
+                glass.style.transform = 'scale(1.05)';
+                
+                setTimeout(() => {
+                    glass.style.transform = 'scale(1)';
+                }, 200);
+            }
+
+            updateUI() {
+                const percentage = Math.min((this.currentAmount / this.settings.dailyGoal) * 100, 100);
+                
+                // Update progress teksten
+                document.getElementById('progressText').textContent = `${this.currentAmount} / ${this.settings.dailyGoal} ml`;
+                document.getElementById('progressPercent').textContent = `${Math.round(percentage)}% van je doel bereikt`;
+                
+                // Update water level visueel
+                document.getElementById('waterFill').style.height = `${percentage}%`;
+                
+                // Update today statistic
+                document.getElementById('todayAmount').textContent = `${this.currentAmount}ml`;
+                
+                console.log(`UI bijgewerkt: ${this.currentAmount}ml (${Math.round(percentage)}%)`);
+            }
+        }
