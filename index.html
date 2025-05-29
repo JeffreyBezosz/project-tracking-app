@@ -582,6 +582,26 @@
                 this.updateCalendarDay();
             }
 
+            updateStats() {
+                const dates = Object.keys(this.data).sort();
+                const amounts = Object.values(this.data);
+                
+                // Today
+                document.getElementById('todayAmount').textContent = `${this.getTodayAmount()}ml`;
+                
+                // Week average
+                const weekDates = dates.filter(date => {
+                    const d = new Date(date);
+                    const now = new Date();
+                    const diffTime = Math.abs(now - d);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    return diffDays <= 7;
+                });
+                const weekAverage = weekDates.length > 0 ? 
+                    Math.round(weekDates.reduce((sum, date) => sum + (this.data[date] || 0), 0) / weekDates.length) : 0;
+                document.getElementById('weekAverage').textContent = `${weekAverage}ml`;            
+
+
 checkAchievements() {
                 const achievements = [];
                 
