@@ -542,6 +542,10 @@
                 document.getElementById('goalInput').value = this.settings.dailyGoal;
                 document.getElementById('reminderInput').value = this.settings.reminderInterval;
             }
+
+            getTodayAmount() {
+                return this.data[this.today] || 0;
+            }
            
             addWater(amount) {
                 console.log(`Water toevoegen: ${amount}ml`);
@@ -565,6 +569,17 @@
                 } else {
                     console.log('Ongeldige hoeveelheid ingevoerd');
                 }
+            }
+
+            updateUI() {
+                const todayAmount = this.getTodayAmount();
+                const percentage = Math.min((todayAmount / this.settings.dailyGoal) * 100, 100);
+                
+                document.getElementById('progressText').textContent = `${todayAmount} / ${this.settings.dailyGoal} ml`;
+                document.getElementById('progressPercent').textContent = `${Math.round(percentage)}% van je doel bereikt`;
+                document.getElementById('waterFill').style.height = `${percentage}%`;
+                
+                this.updateCalendarDay();
             }
 
 checkAchievements() {
