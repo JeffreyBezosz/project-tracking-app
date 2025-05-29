@@ -507,7 +507,7 @@
             <button class="quick-btn" style="margin-top: 20px;" onclick="closeModal()">Geweldig!</button>
         </div>
     </div>
-    
+
 <script>
       
         class WaterTracker {
@@ -525,12 +525,23 @@
             }
 
             init() {
-                console.log('Initialisatie gestart...');
+                this.loadSettings();
                 this.updateUI();
+                this.updateCalendar();
+                this.updateStats();
                 this.checkAchievements();
-                console.log('UI bijgewerkt');
+                this.setupReminders();
+                
+                // Load dark mode
+                if (this.settings.darkMode) {
+                    document.body.classList.add('dark-mode');
+                }
             }
 
+            loadSettings() {
+                document.getElementById('goalInput').value = this.settings.dailyGoal;
+                document.getElementById('reminderInput').value = this.settings.reminderInterval;
+            }
            
             addWater(amount) {
                 console.log(`Water toevoegen: ${amount}ml`);
