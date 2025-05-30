@@ -110,7 +110,6 @@
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             transition: height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 0 0 56px 56px;
-            height: 25%;
         }
 
         .water-wave {
@@ -437,14 +436,14 @@
     </style>
 </head>
 <body>
-<div class="container">
+    <div class="container">
         <div class="header">
             <h1>💧 Water Tracker Pro</h1>
             <p>Stay hydrated, stay healthy!</p>
         </div>
 
         <div class="card progress-section">
-            <div class="water-glass" id="waterGlass">
+            <div class="water-glass">
                 <div class="water-fill" id="waterFill">
                     <div class="water-wave"></div>
                 </div>
@@ -476,22 +475,44 @@
                     <div class="stat-label">Vandaag</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">0ml</div>
+                    <div class="stat-value" id="weekAverage">0ml</div>
                     <div class="stat-label">Week gemiddeld</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">0</div>
+                    <div class="stat-value" id="streak">0</div>
                     <div class="stat-label">Dagen streak</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">0</div>
+                    <div class="stat-value" id="totalDays">0</div>
                     <div class="stat-label">Doel behaald</div>
                 </div>
             </div>
         </div>
-    </div>
 
-           <div class="controls">
+        <div class="card">
+            <div class="calendar-header">
+                <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
+                <div class="calendar-title" id="calendarTitle">December 2024</div>
+                <button class="calendar-nav" onclick="changeMonth(1)">›</button>
+            </div>
+            <div class="calendar-grid" id="calendar"></div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-bottom: 15px; text-align: center;">⚙️ Instellingen</h3>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <span>Dagdoel (ml)</span>
+                    <input type="number" id="goalInput" value="2000" min="500" max="5000" onchange="updateGoal()">
+                </div>
+                <div class="setting-item">
+                    <span>Herinnering interval (min)</span>
+                    <input type="number" id="reminderInput" value="60" min="15" max="240" onchange="updateReminder()">
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
             <button class="control-btn" onclick="resetDay()">🔄 Reset vandaag</button>
             <button class="control-btn" onclick="toggleDarkMode()">🌙 Dark mode</button>
             <button class="control-btn" onclick="exportData()">📤 Export data</button>
@@ -508,19 +529,19 @@
         </div>
     </div>
 
-<script>
-      
+    <script>
         class WaterTracker {
             constructor() {
-                this.settings = {
+                this.data = JSON.parse(localStorage.getItem('waterTrackerData')) || {};
+                this.settings = JSON.parse(localStorage.getItem('waterTrackerSettings')) || {
                     dailyGoal: 2000,
                     reminderInterval: 60,
                     darkMode: false
                 };
-                this.currentAmount = 0;
+                this.currentMonth = new Date().getMonth();
+                this.currentYear = new Date().getFullYear();
                 this.today = new Date().toISOString().split('T')[0];
                 
-                console.log('Water Tracker geïnitialiseerd op:', this.today);
                 this.init();
             }
 
@@ -546,28 +567,29 @@
             getTodayAmount() {
                 return this.data[this.today] || 0;
             }
-           
+
             addWater(amount) {
-                console.log(`Water toevoegen: ${amount}ml`);
-                this.currentAmount += amount;
-                this.updateUI();
-                this.checkAchievements();
-                this.showWaterAnimation();
+                const currentAmount = this.getTodayAmount();
+                const newAmount = currentAmount + amount;
                 
-                console.log(`Totaal nu: ${this.currentAmount}ml`);
+                this.data[this.today] = newAmount;
+                this.saveData();
+                this.updateUI();
+                this.updateStats();
+                this.checkAchievements();
+                
+                // Check if goal reached
+                if (currentAmount < this.settings.dailyGoal && newAmount >= this.settings.dailyGoal) {
+                    this.showAchievementModal();
+                }
             }
 
-            
             addCustomWater() {
                 const input = document.getElementById('customAmount');
                 const amount = parseInt(input.value);
-                
                 if (amount && amount > 0) {
-                    console.log(`Custom water toevoegen: ${amount}ml`);
                     this.addWater(amount);
-                    input.value = ''; 
-                } else {
-                    console.log('Ongeldige hoeveelheid ingevoerd');
+                    input.value = '';
                 }
             }
 
@@ -599,9 +621,10 @@
                 });
                 const weekAverage = weekDates.length > 0 ? 
                     Math.round(weekDates.reduce((sum, date) => sum + (this.data[date] || 0), 0) / weekDates.length) : 0;
-                document.getElementById('weekAverage').textContent = `${weekAverage}ml`;            
-
-                                let streak = 0;
+                document.getElementById('weekAverage').textContent = `${weekAverage}ml`;
+                
+                // Streak
+                let streak = 0;
                 for (let i = 0; i >= -30; i--) {
                     const date = new Date();
                     date.setDate(date.getDate() + i);
@@ -621,68 +644,229 @@
                 document.getElementById('totalDays').textContent = goalDays;
             }
 
-
-checkAchievements() {
+            checkAchievements() {
                 const achievements = [];
+                const todayAmount = this.getTodayAmount();
                 
-                if (this.currentAmount >= this.settings.dailyGoal) {
+                if (todayAmount >= this.settings.dailyGoal) {
                     achievements.push('🏆 Doel behaald!');
                 }
-                if (this.currentAmount >= this.settings.dailyGoal * 1.5) {
+                if (todayAmount >= this.settings.dailyGoal * 1.5) {
                     achievements.push('💪 Overachiever!');
                 }
-                if (this.currentAmount >= 1000) {
-                    achievements.push('🚀 Goed bezig!');
+                
+                const streak = parseInt(document.getElementById('streak').textContent);
+                if (streak >= 7) {
+                    achievements.push('🔥 Week streak!');
+                }
+                if (streak >= 30) {
+                    achievements.push('👑 Maand streak!');
                 }
                 
-              
-                const achievementsEl = document.getElementById('achievements');
-                achievementsEl.innerHTML = achievements
-                    .map(achievement => `<div class="achievement">${achievement}</div>`)
-                    .join('');
-                
-                console.log('Achievements bijgewerkt:', achievements);
+                document.getElementById('achievements').innerHTML = 
+                    achievements.map(achievement => `<div class="achievement">${achievement}</div>`).join('');
             }
 
-            showWaterAnimation() {
-                const glass = document.getElementById('waterGlass');
-                glass.style.transform = 'scale(1.05)';
+            updateCalendar() {
+                const calendar = document.getElementById('calendar');
+                const title = document.getElementById('calendarTitle');
                 
-                setTimeout(() => {
-                    glass.style.transform = 'scale(1)';
-                }, 200);
+                const monthNames = ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni',
+                    'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'];
+                
+                title.textContent = `${monthNames[this.currentMonth]} ${this.currentYear}`;
+                
+                calendar.innerHTML = '';
+                
+                const firstDay = new Date(this.currentYear, this.currentMonth, 1);
+                const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+                const startDate = new Date(firstDay);
+                startDate.setDate(startDate.getDate() - firstDay.getDay());
+                
+                for (let i = 0; i < 42; i++) {
+                    const date = new Date(startDate);
+                    date.setDate(startDate.getDate() + i);
+                    
+                    const dateStr = date.toISOString().split('T')[0];
+                    const amount = this.data[dateStr] || 0;
+                    const isCurrentMonth = date.getMonth() === this.currentMonth;
+                    const isToday = dateStr === this.today;
+                    
+                    const day = document.createElement('div');
+                    day.className = 'calendar-day';
+                    day.textContent = date.getDate();
+                    
+                    if (!isCurrentMonth) {
+                        day.style.opacity = '0.3';
+                    }
+                    
+                    if (isToday) {
+                        day.classList.add('today');
+                    } else if (amount >= this.settings.dailyGoal) {
+                        day.classList.add('completed');
+                    } else if (amount > 0) {
+                        day.classList.add('partial');
+                    }
+                    
+                    day.title = `${date.toLocaleDateString()}: ${amount}ml`;
+                    calendar.appendChild(day);
+                }
             }
 
-            updateUI() {
-                const percentage = Math.min((this.currentAmount / this.settings.dailyGoal) * 100, 100);
+            updateCalendarDay() {
+                // Refresh only today's calendar day
+                this.updateCalendar();
+            }
+
+            changeMonth(direction) {
+                this.currentMonth += direction;
+                if (this.currentMonth > 11) {
+                    this.currentMonth = 0;
+                    this.currentYear++;
+                } else if (this.currentMonth < 0) {
+                    this.currentMonth = 11;
+                    this.currentYear--;
+                }
+                this.updateCalendar();
+            }
+
+            updateGoal() {
+                const newGoal = parseInt(document.getElementById('goalInput').value);
+                this.settings.dailyGoal = newGoal;
+                this.saveSettings();
+                this.updateUI();
+                this.updateStats();
+                this.checkAchievements();
+            }
+
+            updateReminder() {
+                const newInterval = parseInt(document.getElementById('reminderInput').value);
+                this.settings.reminderInterval = newInterval;
+                this.saveSettings();
+                this.setupReminders();
+            }
+
+            setupReminders() {
+                if (this.reminderInterval) {
+                    clearInterval(this.reminderInterval);
+                }
                 
-                // Update progress teksten
-                document.getElementById('progressText').textContent = `${this.currentAmount} / ${this.settings.dailyGoal} ml`;
-                document.getElementById('progressPercent').textContent = `${Math.round(percentage)}% van je doel bereikt`;
+                this.reminderInterval = setInterval(() => {
+                    const amount = this.getTodayAmount();
+                    if (amount < this.settings.dailyGoal) {
+                        this.showNotification('💧 Tijd om water te drinken!', 
+                            `Je hebt nog ${this.settings.dailyGoal - amount}ml nodig voor je doel.`);
+                    }
+                }, this.settings.reminderInterval * 60000);
+            }
+
+            showNotification(title, body) {
+                if (Notification.permission === 'granted') {
+                    new Notification(title, { body, icon: '💧' });
+                } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            new Notification(title, { body, icon: '💧' });
+                        }
+                    });
+                }
+            }
+
+            showAchievementModal() {
+                document.getElementById('achievementModal').classList.add('show');
+            }
+
+            closeModal() {
+                document.getElementById('achievementModal').classList.remove('show');
+            }
+
+            resetDay() {
+                if (confirm('Weet je zeker dat je de data van vandaag wilt resetten?')) {
+                    delete this.data[this.today];
+                    this.saveData();
+                    this.updateUI();
+                    this.updateStats();
+                    this.checkAchievements();
+                }
+            }
+
+            toggleDarkMode() {
+                document.body.classList.toggle('dark-mode');
+                this.settings.darkMode = document.body.classList.contains('dark-mode');
+                this.saveSettings();
+            }
+
+            exportData() {
+                const exportData = {
+                    data: this.data,
+                    settings: this.settings,
+                    exportDate: new Date().toISOString()
+                };
                 
-                // Update water level visueel
-                document.getElementById('waterFill').style.height = `${percentage}%`;
-                
-                // Update today statistic
-                document.getElementById('todayAmount').textContent = `${this.currentAmount}ml`;
-                
-                console.log(`UI bijgewerkt: ${this.currentAmount}ml (${Math.round(percentage)}%)`);
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `water-tracker-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            saveData() {
+                localStorage.setItem('waterTrackerData', JSON.stringify(this.data));
+            }
+
+            saveSettings() {
+                localStorage.setItem('waterTrackerSettings', JSON.stringify(this.settings));
             }
         }
 
+        // Initialize the app
         let tracker;
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM geladen, tracker wordt gestart...');
             tracker = new WaterTracker();
         });
 
-        
+        // Global functions for HTML onclick handlers
         function addWater(amount) {
             tracker.addWater(amount);
         }
 
         function addCustomWater() {
             tracker.addCustomWater();
+        }
+
+        function changeMonth(direction) {
+            tracker.changeMonth(direction);
+        }
+
+        function updateGoal() {
+            tracker.updateGoal();
+        }
+
+        function updateReminder() {
+            tracker.updateReminder();
+        }
+
+        function resetDay() {
+            tracker.resetDay();
+        }
+
+        function toggleDarkMode() {
+            tracker.toggleDarkMode();
+        }
+
+        function exportData() {
+            tracker.exportData();
+        }
+
+        function closeModal() {
+            tracker.closeModal();
+        }
+
+        // Request notification permission on load
+        if ('Notification' in window) {
+            Notification.requestPermission();
         }
     </script>
 </body>
