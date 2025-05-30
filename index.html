@@ -601,6 +601,26 @@
                     Math.round(weekDates.reduce((sum, date) => sum + (this.data[date] || 0), 0) / weekDates.length) : 0;
                 document.getElementById('weekAverage').textContent = `${weekAverage}ml`;            
 
+                                let streak = 0;
+                for (let i = 0; i >= -30; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() + i);
+                    const dateStr = date.toISOString().split('T')[0];
+                    if ((this.data[dateStr] || 0) >= this.settings.dailyGoal) {
+                        if (i === 0) streak++;
+                        else if (streak > 0 || i === -1) streak++;
+                        else break;
+                    } else if (i === 0) {
+                        break;
+                    }
+                }
+                document.getElementById('streak').textContent = streak;
+                
+                // Total days goal reached
+                const goalDays = dates.filter(date => (this.data[date] || 0) >= this.settings.dailyGoal).length;
+                document.getElementById('totalDays').textContent = goalDays;
+            }
+
 
 checkAchievements() {
                 const achievements = [];
